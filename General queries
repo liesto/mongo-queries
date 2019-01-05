@@ -1,0 +1,23 @@
+// Get LUUID (contact) from an email address
+
+db.getCollection('Contacts').find({"Identifiers.Identifier":"email@address.com"})
+
+// Get all interactions from a LUUID
+
+db.getCollection('Interactions').find(
+    { 
+        ContactId: LUUID("94584940-d1d1-0c45-bb5d-a505472b6481")
+    }
+)
+
+// Get all email addresses from contacts that match a particular pattern card
+
+db.getCollection('Contacts').find(
+{
+     "Identifiers.Identifier" : { $exists: true },
+     "Behavior Profiles.Entries.2d495b84045342e89b466a0a0d8bf966.PatternId":LUUID("6b246a3d-ad92-0e41-a0d3-5881a8473767")
+},
+{
+     _id: 0,  "Identifiers.Identifier": 1
+}
+).forEach(function(myDoc) { print(  myDoc.Identifiers.Identifier ); });
