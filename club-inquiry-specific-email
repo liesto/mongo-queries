@@ -1,0 +1,44 @@
+// This returns the club inqury
+// for a specific email address.
+//
+// Replace the email address approx on line 22
+
+db.Interactions.aggregate([
+    { 
+        $match: { "Pages.PageEvents.Name": "Club inquiry" } 
+    }
+    ,
+    {
+        $lookup:
+        {
+            from: "Contacts",
+            localField: "ContactId",
+            foreignField: "_id",
+            as: "contact_email"
+        }
+    }
+   ,
+    {
+        "$match": {"contact_email.Identifiers.Identifier" : "cfazzano@yahoo.com"} 
+    }
+    ,
+    { 
+        $project: 
+        { 
+            "Pages.Url.Path": true, 
+            "ContactId": true,
+            "contact_email.Identifiers.Identifier": true,
+        } 
+    }
+    ,
+    { 
+        $project: 
+        { 
+            "Pages.Url.Path": true, 
+            "contact_email.Identifiers.Identifier": true,
+        } 
+    }
+])
+
+
+
