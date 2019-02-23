@@ -1,0 +1,50 @@
+// club inqury
+
+db.Interactions.aggregate([
+    { 
+        $match: { "Pages.PageEvents.Name": "Club inquiry" } 
+    }
+    ,
+    {
+        $lookup:
+        {
+            from: "Contacts",
+            localField: "ContactId",
+            foreignField: "_id",
+            as: "contact_email"
+        }
+    }
+   ,
+    { 
+        $match: { "contact_email.Identifiers.Identifier": {$exists:true} } 
+    }
+    ,
+    { 
+        $project: 
+        { 
+            second_record: { $arrayElemAt: [ "$Pages", 2] },
+            "Pages.Url.Path": true, 
+            "ContactId": true,
+            "contact_email.Identifiers.Identifier": true,
+        } 
+    }
+    ,
+    { 
+        $project: 
+        { 
+            "Pages": false
+        } 
+    }
+    ,
+    { 
+        $project: 
+        { 
+            "second_record.Url.Path": true, 
+            "ContactId": true,
+            "contact_email.Identifiers.Identifier": true,
+        } 
+    }
+])
+
+
+
