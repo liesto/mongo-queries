@@ -1,0 +1,58 @@
+// This query returns all the addresses and URL's that match.
+//
+// Query is quicker if you eliminate the last match and which will return all the results.
+
+// Added the printing out of the first and last name.
+
+db.Interactions.aggregate([
+    
+    // only pages that have at least one club inquiry
+    // this is to speed up the query
+    { 
+        $match: { "Pages.PageEvents.Name": "Club inquiry" } 
+    }
+    ,
+    // join with the contacts
+    {
+        $lookup:
+        {
+            from: "Contacts",
+            localField: "ContactId",
+            foreignField: "_id",
+            as: "contact_email"
+        }
+    },
+    // only look at records that have a email, to shrink after $lookup
+    { 
+        $match: { "contact_email.Identifiers.Identifier": {$exists:true} } 
+    }
+    ,
+    // We pull out the interesting parts
+    { 
+        $project: 
+        { 
+            "Pages.Url.Path": true, 
+            "Pages.PageEvents.Name": true,
+            "contact_email.Identifiers.Identifier": true,
+            "contact_email.Personal": true,
+        } 
+    },
+    { 
+        $unwind: '$Pages'  
+    },
+    { 
+        // this is the $match to trim after the $unwind
+        $match: { "Pages.PageEvents.Name": "Club inquiry" } 
+    },
+    { 
+        $project: 
+        { 
+            "Pages.Url.Path": true,
+            "contact_email.Identifiers.Identifier": true,
+            "contact_email.Personal": true,
+        } 
+    },
+    { 
+        $match: { "contact_email.Identifiers.Identifier": "cfazzano@yahoo.com" } 
+    }
+]).pretty()
