@@ -1,0 +1,9 @@
+how to talk to MSSQL JSON data. This will give you all the *goals* in 1 shard (there are 2)
+SELECT *
+  FROM [xdb_collection].[Interactions]
+  WHERE JSON_VALUE(Events, '$[0]."@odata.type"') = '#Sitecore.XConnect.Goal'
+  
+  This will get you a particular event with a Sitecore ID of `82c4c49c-b6b2-4b02-8e2f-fbcba9f92fe4`
+  SELECT *
+  FROM [xdb_collection].[Interactions]
+  WHERE JSON_VALUE(Events, '$[0].DefinitionId') = '82c4c49c-b6b2-4b02-8e2f-fbcba9f92fe4'
