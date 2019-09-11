@@ -39,3 +39,13 @@ SELECT *
   FROM [xdb_collection].[ContactFacets]
   Where FacetKey = 'Emails'
   AND JSON_VALUE(FacetData, '$.PreferredEmail.SmtpAddress') = 'jbw@buildabonfire.com'
+  
+#Find a contact with a certain emailaddress identifier
+SELECT [ContactId]
+      ,CONVERT(VARCHAR(MAX), [Identifier]) as DecodedIdentifier
+      ,[Source]
+      ,[Identifier]
+      ,[IdentifierHash]
+      ,[IdentifierType]
+  FROM [xdb_collection].[ContactIdentifiers]
+  WHERE Identifier = CONVERT(VARBINARY(MAX), 'cja@buildabonfire.com')
