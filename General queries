@@ -33,3 +33,9 @@ db.getCollection('ContactIdentifierIndex').find({"contact_id.id":UUID("9f0d6eaf-
 #Find a contact by ID
 db.getCollection('Contacts').find({"_id.id":UUID("9f0d6eaf-6570-4373-9ff8-d0061ac07de4")})
 #Decode binary data  https://www.base64decode.org/
+
+#Find contacts who have a certain email address
+SELECT *
+  FROM [xdb_collection].[ContactFacets]
+  Where FacetKey = 'Emails'
+  AND JSON_VALUE(FacetData, '$.PreferredEmail.SmtpAddress') = 'jbw@buildabonfire.com'
