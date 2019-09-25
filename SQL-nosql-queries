@@ -1,4 +1,4 @@
-how to talk to MSSQL JSON data. This will give you all the *goals* in 1 shard (there are 2)
+##how to talk to MSSQL JSON data. This will give you all the *goals* in 1 shard (there are 2)
 SELECT *
   FROM [xdb_collection].[Interactions]
   WHERE JSON_VALUE(Events, '$[0]."@odata.type"') = '#Sitecore.XConnect.Goal'
@@ -7,3 +7,19 @@ SELECT *
   SELECT *
   FROM [xdb_collection].[Interactions]
   WHERE JSON_VALUE(Events, '$[0].DefinitionId') = '82c4c49c-b6b2-4b02-8e2f-fbcba9f92fe4'
+
+##Find contacts who have a certain email address
+SELECT *
+  FROM [xdb_collection].[ContactFacets]
+  Where FacetKey = 'Emails'
+  AND JSON_VALUE(FacetData, '$.PreferredEmail.SmtpAddress') = 'jbw@buildabonfire.com'
+  
+##Find a contact with a certain emailaddress identifier
+  SELECT [ContactId]
+      ,CONVERT(VARCHAR(MAX), [Identifier]) as DecodedIdentifier
+      ,[Source]
+      ,[Identifier]
+      ,[IdentifierHash]
+      ,[IdentifierType]
+  FROM [xdb_collection].[ContactIdentifiers]
+  WHERE Identifier = CONVERT(VARBINARY(MAX), 'cja@buildabonfire.com')
