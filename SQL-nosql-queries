@@ -23,3 +23,12 @@ SELECT *
       ,[IdentifierType]
   FROM [xdb_collection].[ContactIdentifiers]
   WHERE Identifier = CONVERT(VARBINARY(MAX), 'cja@buildabonfire.com')
+
+## Get Contact info by ContactID
+SELECT TOP (1000) [ContactId]
+	  ,[Source]
+      ,[Identifier]
+      ,[IdentifierHash]
+      ,[IdentifierType]	  
+  FROM [xdb_collection].[ContactIdentifiers]
+  WHERE ContactId = 'bc8545b6-3016-0000-0000-05a9ece6b575'  
